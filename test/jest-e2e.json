@@ -1,0 +1,25 @@
+{
+  "moduleFileExtensions": [
+    "js",
+    "json",
+    "ts"
+  ],
+  "rootDir": ".",
+  "testEnvironment": "node",
+  "testRegex": ".e2e-spec.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "moduleNameMapper": {
+    "@app/common/(.*)": "<rootDir>/../libs/common/src/$1",
+    "@app/common": "<rootDir>/../libs/common/src",
+    "@app/encrypt/(.*)": "<rootDir>/../libs/encrypt/src/$1",
+    "@app/encrypt": "<rootDir>/../libs/encrypt/src",
+    "@app/random/(.*)": "<rootDir>/../libs/random/src/$1",
+    "@app/random": "<rootDir>/../libs/random/src",
+    "@app/randomize/(.*)": "<rootDir>/../libs/randomize/src/$1",
+    "@app/randomize": "<rootDir>/../libs/randomize/src",
+    "@app/mailer/(.*)": "<rootDir>/../libs/mailer/src/$1",
+    "@app/mailer": "<rootDir>/../libs/mailer/src"
+  }
+}
