@@ -8,19 +8,16 @@ import {
   Delete,
 } from '@nestjs/common';
 import { FilesService } from './files.service';
-import { CreateFileDto } from './dto/create-file.dto';
 import { UpdateFileDto } from './dto/update-file.dto';
-import { Files } from '@app/common';
-import { FileArray } from 'express-fileupload';
 
 @Controller('files')
 export class FilesController {
   constructor(private readonly filesService: FilesService) {}
 
   @Post()
-  // create(@Files() file: FileArray) {
-  //   console.log(file);
-  create(@Body() createFileDto: CreateFileDto) {
+  create(@Body() createFileDto: any) {
+    console.log(createFileDto);
+
     return this.filesService.create('createFileDto');
   }
 

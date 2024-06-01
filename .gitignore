@@ -9,6 +9,7 @@ npm-debug.log*
 pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+yarn.lock
 lerna-debug.log*
 
 # OS
@@ -35,3 +36,5 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 .env
+
+mdeia/*

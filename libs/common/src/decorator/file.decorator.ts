@@ -7,7 +7,7 @@ import { Request } from 'express';
  * @param context - ExecutionContext object containing request context.
  * @returns The user object extracted from the request.
  */
-export const Files = createParamDecorator(
+export const File = createParamDecorator(
   (data: unknown, context: ExecutionContext) => {
     // Extract the request object from the context
     const request: Request = context.switchToHttp().getRequest();

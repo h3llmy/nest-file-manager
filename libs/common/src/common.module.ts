@@ -26,10 +26,9 @@ import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
         ssl: configService.get<string>('POSTGRES_SSL', 'false') === 'true',
         synchronize:
           configService.get<string>('RUN_MIGRATIONS', 'false') === 'true',
-        logging:
-          configService.get<string>('NODE_ENV', 'development') ===
-          'development',
-        entities: [__dirname + '**/*.entity.ts'],
+        // logging:
+        //   configService.get<string>('NODE_ENV', 'development') ===
+        //   'development',
       }),
     }),
     MailerModule.forRootAsync({
