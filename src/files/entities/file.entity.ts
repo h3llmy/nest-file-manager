@@ -1,3 +1,4 @@
+import { MimeType } from '@app/common';
 import { User } from 'src/users/entities/user.entity';
 import {
   Column,
@@ -13,8 +14,8 @@ export class File {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => User, (user) => user.file)
-  ownerId: User;
+  @ManyToOne(() => User, (user) => user.files)
+  owner: User;
 
   @Column()
   name: string;
@@ -25,8 +26,11 @@ export class File {
   @Column({ default: false })
   hidden: boolean;
 
-  @Column({ type: 'bigint' })
+  @Column({ type: 'int' })
   size: number;
+
+  @Column()
+  mimeType: string;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: number;

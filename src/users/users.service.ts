@@ -44,6 +44,9 @@ export class UsersService {
         email: search,
       };
     }
+
+    console.log(query);
+
     return this.userRepository.findPagination(query);
   }
 

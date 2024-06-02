@@ -23,9 +23,9 @@ import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
         autoLoadEntities:
           configService.get<string>('NODE_ENV', 'development') ===
           'development',
-        ssl: configService.get<string>('POSTGRES_SSL', 'false') === 'true',
         synchronize:
           configService.get<string>('RUN_MIGRATIONS', 'false') === 'true',
+        ssl: { rejectUnauthorized: false },
         // logging:
         //   configService.get<string>('NODE_ENV', 'development') ===
         //   'development',

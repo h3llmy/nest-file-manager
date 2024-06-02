@@ -33,8 +33,8 @@ export class User {
   @Column({ nullable: true, type: 'bigint' })
   emailVerifiedAt: number;
 
-  @OneToMany(() => File, (file) => file.ownerId)
-  file: File[];
+  @OneToMany(() => File, (file) => file.owner)
+  files: File[];
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: number;

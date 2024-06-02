@@ -4,11 +4,12 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
-import { FileUploadInterceptor, ValidationErrorHandler } from '@app/common';
+import { FormdataInterceptor, ValidationErrorHandler } from '@app/common';
 import { HttpExceptionsFilter } from '@app/common';
 import helmet from 'helmet';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { JwtExceptionsFilter } from '@app/common/errorHandler/JwtErrorHandler';
+import { Response } from 'express';
 
 (async () => {
   const routePrefix: string = 'api/v1';
@@ -24,31 +25,29 @@ import { JwtExceptionsFilter } from '@app/common/errorHandler/JwtErrorHandler';
   app.enableCors();
 
   app.useGlobalInterceptors(
-    new FileUploadInterceptor({
-      autoSave: true,
+    new FormdataInterceptor({
       prefixDirectory: 'media',
       customFileName(context, originalFileName) {
         return Date.now() + '-' + originalFileName;
       },
       customDirectory(context, originalDirectory) {
-        return (
-          originalDirectory +
-          '/' +
-          context.switchToHttp().getRequest()?.user?.id
-        );
+        const request = context.switchToHttp().getRequest();
+        return originalDirectory + '/' + request?.user?.id;
       },
     }),
   );
 
   app.useGlobalPipes(new ValidationErrorHandler());
 
-  app.useGlobalFilters(new HttpExceptionsFilter());
-  app.useGlobalFilters(new JwtExceptionsFilter());
+  app.useGlobalFilters(new HttpExceptionsFilter(), new JwtExceptionsFilter());
 
   app.setGlobalPrefix(routePrefix);
 
   app.useStaticAssets(join(__dirname, '..', 'media'), {
     prefix: '/media',
+    setHeaders: (res: Response) => {
+      res.setHeader('Cross-Origin-Resource-Policy', '*');
+    },
   });
 
   const options = new DocumentBuilder()
