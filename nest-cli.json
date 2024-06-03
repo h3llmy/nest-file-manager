@@ -4,7 +4,7 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "deleteOutDir": true,
-    "webpack": true
+    "webpack": false
   },
   "projects": {
     "common": {
@@ -32,6 +32,15 @@
       "sourceRoot": "libs/randomize/src",
       "compilerOptions": {
         "tsConfigPath": "libs/randomize/tsconfig.lib.json"
+      }
+    },
+    "formdata": {
+      "type": "library",
+      "root": "libs/formdata",
+      "entryFile": "index",
+      "sourceRoot": "libs/formdata/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/formdata/tsconfig.lib.json"
       }
     }
   }

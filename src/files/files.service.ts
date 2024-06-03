@@ -7,17 +7,20 @@ import { User } from 'src/users/entities/user.entity';
 @Injectable()
 export class FilesService {
   constructor(private readonly fileRepository: FileRepository) {}
-  async create(user: User, createFileDto: CreateFileDto) {
-    await this.fileRepository.save({
-      owner: user,
-      hidden: createFileDto.hidden,
-      name: createFileDto.file.fileName,
-      size: createFileDto.file.fileSize,
-      url: createFileDto.file.filePath,
-      mimeType: createFileDto.file.mimetype,
-    });
 
-    createFileDto.file.save();
+  async create(user: User, createFileDto: CreateFileDto) {
+    // await this.fileRepository.save({
+    //   owner: user,
+    //   hidden: createFileDto.hidden,
+    //   name: createFileDto.file.originalFileName,
+    //   size: createFileDto.file.fileSize,
+    //   url: createFileDto.file.filePath,
+    //   mimeType: createFileDto.file.mimetype,
+    // });
+
+    createFileDto.file.forEach((file) => {
+      file.save();
+    });
     return { message: 'Success to upload file' };
   }
 

@@ -97,7 +97,8 @@
     "moduleNameMapper": {
       "^@app/common(|/.*)$": "<rootDir>/libs/common/src/$1",
       "^@app/encryption(|/.*)$": "<rootDir>/libs/encryption/src/$1",
-      "^@app/randomize(|/.*)$": "<rootDir>/libs/randomize/src/$1"
+      "^@app/randomize(|/.*)$": "<rootDir>/libs/randomize/src/$1",
+      "^@app/formdata(|/.*)$": "<rootDir>/libs/formdata/src/$1"
     }
   }
 }

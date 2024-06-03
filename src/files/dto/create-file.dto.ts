@@ -1,6 +1,11 @@
-import { FileData, HasMimeType, MimeType, MinFileSize } from '@app/common';
-import { IsFileData } from '@app/common';
-import { MaxFileSize } from '@app/common/decorator/validator/maxFileSize.decorator';
+import {
+  FileData,
+  HasMimeType,
+  MimeType,
+  MinFileSize,
+  IsFileData,
+  MaxFileSize,
+} from '@app/formdata';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 
@@ -14,11 +19,12 @@ export class CreateFileDto {
     name: 'file',
   })
   @IsNotEmpty()
-  @IsFileData()
-  @MinFileSize(5000)
-  @MaxFileSize(10000000000000)
-  @HasMimeType([MimeType['image/jpeg'], MimeType['image/png']])
-  file: FileData;
+  @IsFileData({ each: true })
+  @MinFileSize(5000, { each: true })
+  @MaxFileSize(10000000000000, { each: true })
+  @IsArray()
+  @HasMimeType([MimeType['image/jpeg'], MimeType['image/png']], { each: true })
+  file: FileData[];
 
   @ApiProperty({ required: true })
   @IsBoolean()

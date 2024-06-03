@@ -1,4 +1,4 @@
-import { MimeType } from '@app/common';
+import { MimeType } from '@app/formdata';
 import { User } from 'src/users/entities/user.entity';
 import {
   Column,

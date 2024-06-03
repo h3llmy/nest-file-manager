@@ -20,6 +20,8 @@
     "@app/randomize/(.*)": "<rootDir>/../libs/randomize/src/$1",
     "@app/randomize": "<rootDir>/../libs/randomize/src",
     "@app/mailer/(.*)": "<rootDir>/../libs/mailer/src/$1",
-    "@app/mailer": "<rootDir>/../libs/mailer/src"
+    "@app/mailer": "<rootDir>/../libs/mailer/src",
+    "@app/formdata/(.*)": "<rootDir>/../libs/formdata/src/$1",
+    "@app/formdata": "<rootDir>/../libs/formdata/src"
   }
 }
