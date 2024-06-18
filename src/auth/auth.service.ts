@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { RegisterUserDto } from './dto/register-user.dto';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service';
 import { EncryptionService } from '@app/encryption';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { User } from 'src/users/entities/user.entity';
+import { User } from '../users/entities/user.entity';
 import { RandomizeService } from '@app/randomize';
 import { LoginDto } from './dto/login-user.dto';
 import { MailerService } from '@nestjs-modules/mailer';
@@ -16,6 +16,7 @@ import {
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { ForgetPasswordDto } from './dto/forget-password.dto';
+import { AuthTokenSchema, BasicSuccessSchema } from '@app/common';
 
 /**
  * AuthService handles the authentication and authorization logic.
@@ -56,7 +57,7 @@ export class AuthService {
    * @param registerDto - Data Transfer Object containing user registration information.
    * @returns A message indicating registration success.
    */
-  async register(registerDto: RegisterUserDto): Promise<{ message: string }> {
+  async register(registerDto: RegisterUserDto): Promise<BasicSuccessSchema> {
     const user = await this.usersServices.register(registerDto);
 
     const tokenPayload: IRegisterTokenPayload = {
@@ -90,12 +91,16 @@ export class AuthService {
    * @param token - The verification token sent to the user's email.
    * @returns Login tokens if the email verification is successful.
    */
-  async verifyEmail(token: string) {
+  async verifyEmail(token: string): Promise<AuthTokenSchema> {
     const credential: IRegisterTokenPayload = this.jwtService.verify(token, {
       secret: this.REGISTER_TOKEN_SECRET,
     });
 
     const user = await this.usersServices.findOne(credential.id);
+
+    if (user.emailVerifiedAt) {
+      throw new BadRequestException('User already verified');
+    }
 
     this.usersServices.update(credential.id, {
       emailVerifiedAt: Date.now(),
@@ -110,10 +115,7 @@ export class AuthService {
    * @returns Access and refresh tokens if authentication is successful.
    * @throws BadRequestException if the credentials are invalid or the user is not verified.
    */
-  async login(loginDto: LoginDto): Promise<{
-    accessToken: string;
-    refreshToken: string;
-  }> {
+  async login(loginDto: LoginDto): Promise<AuthTokenSchema> {
     const userCheck = await this.usersServices.findOneByEmail(loginDto.email);
 
     if (
@@ -137,7 +139,7 @@ export class AuthService {
    */
   async forgetPassword(
     forgetPasswordDto: ForgetPasswordDto,
-  ): Promise<{ message: string }> {
+  ): Promise<BasicSuccessSchema> {
     const user = await this.usersServices.findOneByEmail(
       forgetPasswordDto.email,
     );
@@ -178,7 +180,7 @@ export class AuthService {
   async resetPassword(
     token: string,
     resetPassword: ResetPasswordDto,
-  ): Promise<{ message: string }> {
+  ): Promise<BasicSuccessSchema> {
     const credential: IForgetPasswordPayload = this.jwtService.verify(token, {
       secret: this.FORGET_PASSWORD_TOKEN_SECRET,
     });
@@ -199,10 +201,9 @@ export class AuthService {
    * @param refreshTokenDto - Data Transfer Object containing the refresh token.
    * @returns New access and refresh tokens.
    */
-  async refreshToken({ refreshToken }: RefreshTokenDto): Promise<{
-    accessToken: string;
-    refreshToken: string;
-  }> {
+  async refreshToken({
+    refreshToken,
+  }: RefreshTokenDto): Promise<AuthTokenSchema> {
     const credential: ILoginTokenPayload = this.jwtService.verify(
       refreshToken,
       { secret: this.REFRESH_TOKEN_SECRET },
@@ -218,10 +219,7 @@ export class AuthService {
    * @param payload - The user object for which to create tokens.
    * @returns Access and refresh tokens.
    */
-  createLoginToken(payload: User): {
-    accessToken: string;
-    refreshToken: string;
-  } {
+  createLoginToken(payload: User): AuthTokenSchema {
     const tokenPayload: ILoginTokenPayload = {
       id: payload.id,
       email: payload.email,

@@ -1,4 +1,4 @@
-import { FindOneOptions } from 'typeorm';
+import { FindOneOptions, FindOptionsWhere } from 'typeorm';
 
 /**
  * Enum representing the sorting directions.
@@ -13,39 +13,10 @@ export type Relation = {
   nestedRelations?: Relation[];
 };
 
-// Filter type to handle both regular and nested filters
-type Filter<T> = {
-  [P in keyof T]?: T[P] extends object ? Filter<T[P]> : T[P];
-};
-
-/**
- * Interface representing the pagination payload.
- */
-export interface IPaginationPayload<T> {
-  /**
-   * The page number (1-based index).
-   */
+export interface IPaginationPayload<T = any> extends FindOneOptions<T> {
   page?: number;
-  /**
-   * The number of items per page.
-   */
   limit?: number;
-  /**
-   * Search criteria.
-   */
-  search?: Filter<T>;
-  /**
-   * Additional filters.
-   */
-  filters?: Filter<T>;
-  /**
-   * Ordering criteria.
-   */
-  orderBy?: { [P in keyof T]?: SortDirection };
-  /**
-   * re;atopm foe;d.
-   */
-  relations?: FindOneOptions<T>['relations'];
+  search?: FindOptionsWhere<T>[] | FindOptionsWhere<T>;
 }
 
 /**

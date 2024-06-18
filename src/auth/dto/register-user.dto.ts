@@ -27,6 +27,10 @@ export class RegisterUserDto {
   @IsNotEmpty()
   password: string;
 
+  @ApiProperty({
+    description: 'Confirmation user password',
+    example: 'Password123!',
+  })
   @IsString()
   @IsMatchWith('password')
   confirmPassword: string;

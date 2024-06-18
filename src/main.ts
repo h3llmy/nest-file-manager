@@ -1,15 +1,20 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { join } from 'path';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
-import { HttpExceptionsFilter, ValidationErrorHandler } from '@app/common';
-import { FormdataInterceptor } from '@app/formdata';
+import {
+  HttpExceptionsFilter,
+  ValidationErrorHandler,
+  JwtExceptionsFilter,
+} from '@app/common';
+import {
+  DefaultFileSaver,
+  FormdataInterceptor,
+} from 'nestjs-formdata-interceptor';
 import helmet from 'helmet';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { JwtExceptionsFilter } from '@app/common/errorHandler/JwtErrorHandler';
-import { Response } from 'express';
+import { User } from './users/entities/user.entity';
 
 (async () => {
   const routePrefix: string = 'api/v1';
@@ -26,14 +31,17 @@ import { Response } from 'express';
 
   app.useGlobalInterceptors(
     new FormdataInterceptor({
-      prefixDirectory: 'media',
       customFileName(context, originalFileName) {
         return Date.now() + '-' + originalFileName;
       },
-      customDirectory(context, originalDirectory) {
-        const request = context.switchToHttp().getRequest();
-        return originalDirectory + '/' + request?.user?.id;
-      },
+      fileSaver: new DefaultFileSaver({
+        prefixDirectory: 'media',
+        customDirectory(context, originalDirectory) {
+          const request = context.switchToHttp().getRequest();
+          const user = request.user as User;
+          return originalDirectory + '/' + user.id;
+        },
+      }),
     }),
   );
 
@@ -42,13 +50,6 @@ import { Response } from 'express';
   app.useGlobalFilters(new HttpExceptionsFilter(), new JwtExceptionsFilter());
 
   app.setGlobalPrefix(routePrefix);
-
-  app.useStaticAssets(join(__dirname, '..', 'media'), {
-    prefix: '/media',
-    setHeaders: (res: Response) => {
-      res.setHeader('Cross-Origin-Resource-Policy', '*');
-    },
-  });
 
   const options = new DocumentBuilder()
     .setTitle('Api Documentation')

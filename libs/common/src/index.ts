@@ -7,6 +7,11 @@ export * from './decorator/validator/isMatch.decorator';
 
 export * from './errorHandler/httpErrorHandler';
 export * from './errorHandler/validationErrorHandler';
+export * from './errorHandler/JwtErrorHandler';
 
 export * from './database/defaultRepository';
 export * from './database/database.interface';
+
+export * from './dto/basicError.schema';
+export * from './dto/basicSuccess.schema';
+export * from './dto/authToken.schema';

@@ -37,8 +37,8 @@ export class User {
   files: File[];
 
   @CreateDateColumn({ type: 'timestamp' })
-  createdAt: number;
+  createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
-  updatedAt: number;
+  updatedAt: Date;
 }

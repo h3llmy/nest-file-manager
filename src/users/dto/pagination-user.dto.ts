@@ -11,7 +11,7 @@ import {
 import { Type } from 'class-transformer';
 import { SortDirection } from '@app/common';
 
-class UserOrderBy {
+class UserOrder {
   @ApiPropertyOptional({
     name: 'orderBy[username]',
     enum: SortDirection,
@@ -86,12 +86,12 @@ export class PaginationUserDto {
 
   @ApiPropertyOptional({
     description: 'Ordering criteria',
-    type: UserOrderBy,
+    type: UserOrder,
     required: false,
   })
   @IsOptional()
   @IsObject()
   @ValidateNested()
-  @Type(() => UserOrderBy)
-  orderBy?: UserOrderBy;
+  @Type(() => UserOrder)
+  order?: UserOrder;
 }

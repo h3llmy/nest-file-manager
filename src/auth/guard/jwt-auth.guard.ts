@@ -22,7 +22,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       if (info) {
         throw new UnauthorizedException(info.message);
       } else {
-        new UnauthorizedException('Unauthorized');
+        throw new UnauthorizedException('Unauthorized');
       }
     }
     if (info instanceof JsonWebTokenError) {

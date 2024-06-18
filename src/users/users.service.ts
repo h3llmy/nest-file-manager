@@ -8,7 +8,7 @@ import { UserRepository } from './users.repository';
 import { User } from './entities/user.entity';
 import { PaginationUserDto } from './dto/pagination-user.dto';
 import { IPaginationPayload, IPaginationResponse } from '@app/common';
-import { FindOptionsRelations } from 'typeorm';
+import { FindOptionsRelations, ILike, In } from 'typeorm';
 
 /**
  * UsersService provides operations for managing user data.
@@ -39,13 +39,11 @@ export class UsersService {
       ...paginationQuery,
     };
     if (search) {
-      query.search = {
-        username: search,
-        email: search,
+      query.where = {
+        username: ILike(search),
+        email: ILike(search),
       };
     }
-
-    console.log(query);
 
     return this.userRepository.findPagination(query);
   }
@@ -66,6 +64,12 @@ export class UsersService {
     });
     if (!user) throw new NotFoundException(`User with id ${id} not found`);
     return user;
+  }
+
+  async findMany(ids: string[]) {
+    return this.userRepository.find({
+      where: { id: In(ids) },
+    });
   }
 
   /**

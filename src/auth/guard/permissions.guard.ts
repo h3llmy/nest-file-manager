@@ -7,7 +7,6 @@ import {
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { User } from '../../users/entities/user.entity';
-// import { User } from '../../users/entities/user.entity';
 
 /**
  * Guard to check permissions for accessing routes.
